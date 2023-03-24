@@ -1,11 +1,11 @@
 package lógica;
 
-import model.Articulo;
-import model.Cliente;
-import model.ExcepcionDeAplicacion;
+import model.*;
 import sol.GestorBD;
 
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 
@@ -22,6 +22,7 @@ public class practica3 {
             System.out.println(a);
             System.out.println(c);
             datosTodosArtículosBD();
+            creaPedidoRealizacion();
         } catch (ExcepcionDeAplicacion e) {
             e.printStackTrace();
         }
@@ -46,8 +47,37 @@ public class practica3 {
 
     }
 
-    public void creaPedidoRealizacion(){
+    public static void creaPedidoRealizacion(){
         //utilizar util.Calendario para verificar si es festivo o no.
         //si no funciona usar la que realizamos en la práctica 2 del otro día
+
+
+        GestorBD gbd = new GestorBD();
+        GregorianCalendar fecha = new GregorianCalendar();
+
+        try{
+            while(!util.Calendario.isFestivo(fecha)){
+                fecha.add(GregorianCalendar.DAY_OF_MONTH,1);
+            }
+            Cliente cl1 = gbd.getCliente("200006/01");
+            PedidoEnRealizacion pedido =  new PedidoEnRealizacion( "Mie/003LD",cl1,fecha);
+
+            Articulo a1 = gbd.getArticulo("Fag/267FO");
+            LineaEnRealizacion linea1 = new LineaEnRealizacion("lin1", pedido, a1,22, fecha);
+
+            Articulo a2 = gbd.getArticulo("aaaaaa");
+            LineaEnRealizacion linea2 = new LineaEnRealizacion("lin2", pedido, a2,1, fecha);
+            pedido.addLinea(linea1);
+            pedido.addLinea(linea2);
+
+            System.out.println(pedido);
+            Pedido ped = new Pedido(pedido);
+            System.out.println(ped);
+
+        }catch(ExcepcionDeAplicacion eA){
+            eA.printStackTrace();
+            eA.printStackTrace();
+        }
+
     }
 }
